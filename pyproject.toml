@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "omnifocus-mcp"
+version = "0.1.0"
+description = "MCP server exposing OmniFocus 4 to Claude Code and Claude Desktop"
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [{ name = "AJ Wright" }]
+dependencies = [
+    "mcp>=1.2.0",
+    "pydantic>=2.7",
+]
+
+[project.scripts]
+omnifocus-mcp = "omnifocus_mcp.server:main"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.23",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/omnifocus_mcp"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/omnifocus_mcp/scripts" = "omnifocus_mcp/scripts"
+
+[tool.pytest.ini_options]
+markers = [
+    "integration: hits a running OmniFocus instance (disabled by default)",
+]
+addopts = "-m 'not integration'"
+testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "coverage>=7.13.5",
+]
